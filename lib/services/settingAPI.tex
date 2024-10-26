@@ -1,0 +1,102 @@
+import 'dart:convert';
+import 'package:app_sit/models/settingData.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class SettingAPI with ChangeNotifier {
+  final url = 'http://10.0.2.2:8000/submit-data/';
+  SettingData? setting;
+  bool isLoading = false;
+  String? errorMessage;
+
+  Future<SettingData?> getSettingData() async {
+    isLoading = true;
+    notifyListeners();
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var res = SettingData.fromJson(jsonDecode(response.body));
+      setting = res;
+      errorMessage = null;
+      print('Get Successful');
+    } else {
+      errorMessage = 'Get Failed ${response.statusCode}';
+      print(errorMessage);
+    }
+    isLoading = false;
+    notifyListeners();
+    return setting;
+  }
+
+  Future<SettingData?> sendSettingAPIData(String _id,int? selectedDetectFreq,int? selectedSitLimit,int? selectedSitLimitAlarmFreq) async {
+    // if (setting == null) {
+    //   print('No user data to send');
+    //   return;
+    // }
+    print(selectedDetectFreq);
+    print(selectedSitLimit);
+    print(selectedSitLimitAlarmFreq);
+    selectedDetectFreq ??= 10;
+    selectedSitLimit ??= 60;
+    selectedSitLimitAlarmFreq ??= 5;
+    final Map<String, dynamic> data = {
+      "id": _id,
+       "selectedDetectFreq": selectedDetectFreq,
+       "selectedSitLimit": selectedSitLimit,
+       "selectedSitLimitAlarmFreq": selectedSitLimitAlarmFreq,
+    };
+    isLoading = true;
+    notifyListeners();
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200) {
+      print('Send Successful');
+      var res = SettingData.fromJson(jsonDecode(response.body));
+      setting = res;
+      print(setting?.id);
+      errorMessage = null;
+      print(res);
+    } else {
+      errorMessage = 'Send Failed ${response.statusCode}';
+      print(errorMessage);
+    }
+
+    isLoading = false;
+    notifyListeners();
+    return setting;
+  }
+
+  void clearSettingData() {
+    setting = null;
+    errorMessage = null;
+    notifyListeners();
+  }
+
+  void updateSetting({
+    int? selectedDetectFreq,
+    int? detectFreq,
+    int? sitLimit,
+    int? selectedSitLimit,
+    int? sitLimitAlarmFreq,
+    int? selectedSitLimitAlarmFreq,
+  }) {
+    setting?.update(
+      selectedDetectFreq: selectedDetectFreq,
+      detectFreq: detectFreq,
+      sitLimit: sitLimit,
+      selectedSitLimit: selectedSitLimit,
+      sitLimitAlarmFreq: sitLimitAlarmFreq,
+      selectedSitLimitAlarmFreq: selectedSitLimitAlarmFreq,
+    );
+    print('Setting Update Pass');
+    print(
+        "${setting?.selectedDetectFreq}, ${setting?.selectedSitLimit}, ${setting?.selectedSitLimitAlarmFreq}");
+    notifyListeners();
+  }
+}
