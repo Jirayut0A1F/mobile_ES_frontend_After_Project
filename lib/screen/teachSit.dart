@@ -40,15 +40,6 @@ class _TeachSitPaggeState extends State<TeachSitPagge> {
               ),
               Container(
                   padding: const EdgeInsets.all(8),
-                  // color: Colors.white,
-                  // decoration: BoxDecoration(
-                  //   color: Colors.white,
-                  //   border: Border.all(
-                  //     color: Colors.black, // สีของกรอบ
-                  //     width: 5, // ความหนาของกรอบ
-                  //   ),
-                  //   borderRadius: BorderRadius.circular(10), // มุมโค้งของกรอบ
-                  // ),
                   child: Text(
                     info,
                     style: GoogleFonts.mitr(fontSize: 16),

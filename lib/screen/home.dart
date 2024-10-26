@@ -134,14 +134,6 @@ class _HomePageState extends State<HomePage> {
           ? const Center(child: CircularProgressIndicator()) // แสดงโหลดข้อมูล
           : Stack(
               children: [
-                // Container(
-                //   decoration: const BoxDecoration(
-                //     image: DecorationImage(
-                //       image: AssetImage('assets/images/background.png'),
-                //       fit: BoxFit.cover,
-                //     ),
-                //   ),
-                // ),
                 Consumer<UserAPI>(
                   builder: (context, userAPI, child) {
                     if (userAPI.user == null) {

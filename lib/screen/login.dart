@@ -1,9 +1,6 @@
 import 'package:app_sit/screen/load.dart';
 import 'package:app_sit/services/google_signin_api.dart';
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
-// import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,11 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 148, 198, 224),
-      // appBar: AppBar(
-      //   title: const Text('LOGIN'),
-      //   backgroundColor: Colors.blueAccent,
-      //   elevation: 0,
-      // ),
       body: Stack(
         children: [
           Container(

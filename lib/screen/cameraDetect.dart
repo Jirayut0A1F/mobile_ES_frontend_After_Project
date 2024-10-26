@@ -396,50 +396,6 @@ class _CameraDetectState extends State<CameraDetect>
     });
   }
 
-  // void startTakingPictures(int detectFreq, String id) {
-  //   setState(() {
-  //     _isTakingPictures = true;
-  //   });
-  //   // WakelockPlus.toggle(enable: _isTakingPictures);
-  //   WakelockPlus.enable();
-  //   takePicture().then((XFile? file) async {
-  //     if (file != null) {
-  //       imageFile = file;
-  //       List? stateName = await uploadImage(imageFile, id);
-  //       // List stateName=['head','arm','back'];
-  //       // List stateName = ['head', 'arm', 'back', 'leg', 'outSitLimit'];
-
-  //       imageFile = null;
-  //       await _loadSoundSetting();
-  //       if (_enableSound) {
-  //         checkAndNotify(stateName, id);
-  //       }
-  //       print('Subsequent state detected: $stateName');
-  //     }
-
-  //     // Initialize timer to take pictures periodically
-  //     _timer = Timer.periodic(Duration(seconds: detectFreq), (timer) {
-  //       if (_isTakingPictures) {
-  //         takePicture().then((XFile? file) async {
-  //           if (file != null) {
-  //             imageFile = file;
-  //             List? stateName = await uploadImage(imageFile, id);
-  //             // List stateName=['head','arm','back'];
-  //             // List stateName = ['head', 'arm', 'back', 'leg', 'outSitLimit'];
-
-  //             imageFile = null;
-  //             await _loadSoundSetting();
-  //             if (_enableSound) {
-  //               checkAndNotify(stateName, id);
-  //             }
-  //             print('Subsequent state detected: $stateName');
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
-  // }
-
   Future<void> _loadSoundSetting() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _enableSound = prefs.getBool('enableSound') ?? true;

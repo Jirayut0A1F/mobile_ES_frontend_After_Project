@@ -5,7 +5,6 @@ import 'package:app_sit/screen/login.dart';
 import 'package:app_sit/services/userAPI.dart';
 import 'package:app_sit/screen/teachCamera.dart';
 import 'package:app_sit/screen/teachSit.dart';
-import 'package:app_sit/test.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -60,8 +59,6 @@ class MyApp extends StatelessWidget {
           case '/cameraCalibrate':
             return _createSlideTransitionRoute(
                 CameraCalibrate(cameras: cameras ?? []));
-          case '/test':
-            return _createSlideTransitionRoute(const TestPage());
           default:
             return MaterialPageRoute(builder: (context) => const LoginPage());
         }

@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class LoadPage extends StatefulWidget {
   final GoogleSignInAccount user;
-  LoadPage({Key? key, required this.user}) : super(key: key);
+  const LoadPage({super.key, required this.user});
 
   @override
   State<LoadPage> createState() => _LoadPageState();

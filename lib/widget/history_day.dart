@@ -18,66 +18,6 @@ class History_Day extends StatefulWidget {
   State<History_Day> createState() => _History_DayState();
 }
 
-// Future<DailyHistoryData?> getHistoryDate(String selectedDate, String id) async {
-//   const url = 'http://10.0.2.2:8000/daily_history/';
-//   try {
-//     final res = await http.post(
-//       Uri.parse(url),
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//       },
-//       body: jsonEncode(<String, String>{
-//         'accountID': id,
-//         'date': selectedDate,
-//       }),
-//     );
-
-//     if (res.statusCode == 200) {
-//       final Map<String, dynamic> jsonResponse = jsonDecode(res.body);
-//       DailyHistoryData dateData = DailyHistoryData.fromJson(jsonResponse);
-//       print(res.body);
-//       return dateData;
-//     } else {
-//       print('Failed to get data: ${res.statusCode}');
-//       return null;
-//     }
-//   } catch (e) {
-//     print('An error occurred: $e');
-//     return null;
-//   }
-// }
-
-// Future<DailyHistoryImageData?> getHistoryDateImage(
-//     String selectedDate, String id) async {
-//   const url = 'http://10.0.2.2:8000/daily_history_img/';
-//   try {
-//     final res = await http.post(
-//       Uri.parse(url),
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//       },
-//       body: jsonEncode(<String, String>{
-//         'accountID': id,
-//         'date': selectedDate,
-//       }),
-//     );
-
-//     if (res.statusCode == 200) {
-//       final Map<String, dynamic> jsonResponse = jsonDecode(res.body);
-//       DailyHistoryImageData dateImageData =
-//           DailyHistoryImageData.fromJson(jsonResponse);
-//       print(res.body);
-//       return dateImageData;
-//     } else {
-//       print('Failed to get data: ${res.statusCode}');
-//       return null;
-//     }
-//   } catch (e) {
-//     print('An error occurred: $e');
-//     return null;
-//   }
-// }
-
 Future<HistoryDailyData?> getHistoryDate(String selectedDate, String id) async {
   const url = 'http://43.229.133.174:8000/daily_history_data_img/';
   try {
@@ -111,8 +51,6 @@ Future<HistoryDailyData?> getHistoryDate(String selectedDate, String id) async {
 
 class _History_DayState extends State<History_Day> {
   TextEditingController _dateController = TextEditingController();
-  // DailyHistoryData? dateData;
-  // DailyHistoryImageData? dateImageData;
   HistoryDailyData? dateData;
   int? head;
   int? back;
@@ -120,9 +58,7 @@ class _History_DayState extends State<History_Day> {
   int? leg;
   int? sitDuration;
   int? amountSitOverLimit;
-  // List<List<dynamic>> detectList = [];
   List<DetectList> detectList = [];
-  // List<List<dynamic>> detectImgList = [];
   bool isLoading = true;
   bool dataNull = true;
 
@@ -132,42 +68,7 @@ class _History_DayState extends State<History_Day> {
     final now = DateTime.now();
     _dateController.text = DateFormat('yyyy-MM-dd').format(now);
     _fetchDateHistory(_dateController.text);
-    // _fetchDateHistoryImage(_dateController.text);
   }
-
-//   Future<void> _fetchDateHistory(String date) async {
-//   final data = await getHistoryDate(date, Provider.of<UserAPI>(context, listen: false).user!.id);
-//   if (mounted) {
-//     setState(() {
-//       dateData = data;
-//       if (dateData != null) {
-//         head = dateData?.head;
-//         back = dateData?.back;
-//         arm = dateData?.arm;
-//         leg = dateData?.leg;
-//         sitDuration = dateData?.sitDuration;
-//         amountSitOverLimit = dateData?.amountSitOverLimit;
-//         detectList = dateData!.detectList;
-//       } else {
-//         print("data is null");
-//       }
-//     });
-//   }
-// }
-
-// Future<void> _fetchDateHistoryImage(String date) async {
-//   final data = await getHistoryDateImage(date, Provider.of<UserAPI>(context, listen: false).user!.id);
-//   if (mounted) {
-//     setState(() {
-//       dateImageData = data;
-//       if (dateImageData != null) {
-//         detectImgList = dateImageData!.detectImgList;
-//       } else {
-//         print("dataImage is null");
-//       }
-//     });
-//   }
-// }
 
   Future<void> _fetchDateHistory(String date) async {
     setState(() {
@@ -175,7 +76,6 @@ class _History_DayState extends State<History_Day> {
     });
     final data = await getHistoryDate(
         date, Provider.of<UserAPI>(context, listen: false).user!.id);
-    // print(Provider.of<UserAPI>(context, listen: false).user!.id);
     if (mounted) {
       setState(() {
         dateData = data;
@@ -424,7 +324,6 @@ class MyListView extends StatelessWidget {
                   ),
                 ),
                 Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(

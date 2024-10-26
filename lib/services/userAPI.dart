@@ -22,7 +22,6 @@ class UserAPI with ChangeNotifier {
   List<dynamic>? detectFreq;
   List<dynamic>? sitLimit;
   List<dynamic>? sitLimitAlarmFreq;
-  // bool newNoti = true;
 
   Future<UserData?> getUserData(GoogleSignInAccount userG) async {
     try {
@@ -48,9 +47,6 @@ class UserAPI with ChangeNotifier {
         sitLimit = data['sitLimitChoice'];
         selectedSitLimitAlarmFreq = data['sitLimitFreq'];
         sitLimitAlarmFreq = data['sitLimitFreqChoice'];
-        // newNoti = data['newNotification'];
-        // // newNoti = true;
-        // print('newNoti:$newNoti');
         imageProfile = data['imgProfileAxis'] != null
             ? base64Decode(data['imgProfileAxis'])
             : null;
@@ -92,7 +88,6 @@ class UserAPI with ChangeNotifier {
     sitLimit = null;
     sitLimitAlarmFreq = null;
     errorMessage = null;
-    // newNoti = true;
     print('Clear all Data');
     notifyListeners();
   }
@@ -134,12 +129,6 @@ class UserAPI with ChangeNotifier {
     notifyListeners();
     return setting;
   }
-
-  // void clearSettingData() {
-  //   setting = null;
-  //   errorMessage = null;
-  //   notifyListeners();
-  // }
 
   void updateSetting({
     int? selectedDetectFreq,

@@ -18,13 +18,11 @@ import 'package:provider/provider.dart';
 class AdjustPage extends StatefulWidget {
   final Uint8List imageBytes;
   final Map<String, List<double>> data;
-  // final List<double> imgSize;
   final bool isLeft;
   const AdjustPage(
       {super.key,
       required this.imageBytes,
       required this.data,
-      // required this.imgSize,
       required this.isLeft});
 
   @override
@@ -105,41 +103,12 @@ class PointsLinePainter extends CustomPainter {
       ..color = Colors.blue
       ..strokeWidth = 4;
 
-    // double earX = 0.38671621680259705;
-    // double earY = 0.17606954276561737;
-    // double shoulderX = 0.30389082431793213;
-    // double shoulderY = 0.29502516984939575;
-    // double elbowX = 0.39642563462257385;
-    // double elbowY = 0.4462054669857025;
-    // double hipX = 0.3572821021080017;
-    // double hipY = 0.5594013929367065;
-    // double kneeX = 0.7130148410797119;
-    // double kneeY = 0.5667864680290222;
-    // double ankleX = 0.7089780569076538;
-    // double ankleY = 0.7508898377418518;
-
-    // double headNewValueX = earX + headValueX;
-    // double headNewValueY = headValueX < 0 ? earY : earY + headValueX;
-    // double armNewValueX = elbowX + armValueX;
-    // double armNewValueY = elbowY - armValueX;
-    // double legNewValueX = ankleX + legValueX;
-
-    // final point = [
-    //   Offset(size.width * (headNewValueX + backValueX),
-    //       size.height * (headNewValueY)),
-    //   Offset(size.width * (shoulderX + backValueX), size.height * (shoulderY)),
-    //   Offset(size.width * (armNewValueX + backValueX),
-    //       size.height * (armNewValueY)),
-    //   Offset(size.width * hipX, size.height * hipY),
-    //   Offset(size.width * kneeX, size.height * kneeY),
-    //   Offset(size.width * legNewValueX, size.height * ankleY),
-    // ];
-    double newEarX = earX + headValueX; //+ backValueX;
-    double newEarY = earY + headValueY; //+ backValueY;
+    double newEarX = earX + headValueX;
+    double newEarY = earY + headValueY;
     double newShoulderX = shoulderX + backValueX;
     double newShoulderY = shoulderY + backValueY;
-    double newElbowX = elbowX + armValueX; //+ backValueX;
-    double newElbowY = elbowY + armValueY; //+ backValueY;
+    double newElbowX = elbowX + armValueX;
+    double newElbowY = elbowY + armValueY;
     double newAnkleX = ankleX + legValueX;
     double newAnkleY = ankleY + legValueY;
     final point = [
@@ -328,31 +297,7 @@ class _AdjustPageState extends State<AdjustPage> {
   double _currentValueLegY = 0;
 
   Map<String, List<double>>? newAngle;
-  // Map<String, String>? API = {};
   Size? imageSize;
-  // Future<void> drawLineWithOpenCV() async {
-  //   // โหลดหรือสร้างภาพว่าง ๆ
-  //   cv.Mat image =
-  //       cv.Mat.eye(500, 500, cv.MatType.CV_8UC3); // สร้างภาพขนาด 500x500
-
-  //   // กำหนดจุดเริ่มต้นและจุดสิ้นสุด
-  //   cv.Point start = cv.Point(100, 100);
-  //   cv.Point end = cv.Point(400, 400);
-
-  //   // กำหนดสีของเส้น (เช่น สีแดง)
-  //   cv.Scalar lineColor = cv.Scalar(0, 0, 255); // รูปแบบ BGR สำหรับสีแดง
-
-  //   // กำหนดความหนาของเส้น
-  //   int thickness = 2;
-
-  //   // วาดเส้นลงบนภาพ
-  //   cv.line(image, start, end, lineColor, thickness: thickness);
-
-  //   // บันทึกหรือแสดงภาพ
-  //   String outputPath = 'output_image.jpg';
-  //   await cv.imwrite(outputPath, image);
-  //   print('วาดเส้นและบันทึกเป็น $outputPath');
-  // }
 
   @override
   void initState() {

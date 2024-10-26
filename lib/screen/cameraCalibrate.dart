@@ -31,7 +31,6 @@ class CameraCalibrate extends StatefulWidget {
 Future<Map<String, Map>?> uploadCalibrate(
     String id, XFile imageFile, String startCalibrate) async {
   const url = 'http://mesb.in.th:8000/process_calibrate/';
-  // const url = 'http://mesb.in.th:8000/test_calibrate_L/';
   Uint8List bytes = await imageFile.readAsBytes();
   String imageBase64 = base64Encode(bytes);
   final res = await http.post(Uri.parse(url),
