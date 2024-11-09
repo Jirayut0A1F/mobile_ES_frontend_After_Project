@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:app_sit/models/setting_data.dart';
 import 'package:app_sit/resources/app_resources.dart';
+import 'package:app_sit/services/google_signin_api.dart';
 import 'package:app_sit/services/userAPI.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,6 +60,24 @@ class _SettingPageState extends State<SettingPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeSettings();
     });
+  }
+
+  Future<void> deleteMember(String id) async {
+    const url = 'http://43.229.133.174:8000/deleteMember/';
+    final res = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'accountID': id,
+      }),
+    );
+    if (res.statusCode == 200) {
+      print('Dlete Member Success');
+    } else {
+      print('Failed ${res.statusCode}');
+    }
   }
 
   void _initializeSettings() async {
@@ -118,107 +139,195 @@ class _SettingPageState extends State<SettingPage> {
           if (settingAPI.setting == null) {
             return const Center(child: CircularProgressIndicator());
           }
-
-          return ListView(
+          String id = settingAPI.setting!.id;
+          return Column(
             children: <Widget>[
-              Card(
-                child: ExpansionTile(
-                  title: Text(
-                    'การนั่งต่อเนื่อง',
-                    style: GoogleFonts.mitr(),
-                  ),
-                  initiallyExpanded: true,
+              Expanded(
+                child: ListView(
                   children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        'ระยะเวลา (นาที)',
-                        style: GoogleFonts.mitr(),
+                    Card(
+                      child: ExpansionTile(
+                        title: Text(
+                          'การนั่งต่อเนื่อง',
+                          style: GoogleFonts.mitr(),
+                        ),
+                        initiallyExpanded: true,
+                        children: <Widget>[
+                          ListTile(
+                            title: Text(
+                              'ระยะเวลา (นาที)',
+                              style: GoogleFonts.mitr(),
+                            ),
+                            trailing: _buildDropdownButtonSitLimit(
+                              _selectedSitLimit ?? 1,
+                              (int? newValue) {
+                                setState(() {
+                                  _selectedSitLimit = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: Text(
+                              'ความถี่แจ้งเตือน (นาที)',
+                              style: GoogleFonts.mitr(),
+                            ),
+                            trailing: _buildDropdownButtonSitLimitAlarmFreq(
+                              _selectedSitLimitAlarmFreq ?? 1,
+                              (int? newValue) {
+                                setState(() {
+                                  _selectedSitLimitAlarmFreq = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      trailing: _buildDropdownButtonSitLimit(
-                        _selectedSitLimit ?? 1,
-                        (int? newValue) {
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: Text(
+                          'ความถี่ในการตรวจจับ (วินาที)',
+                          style: GoogleFonts.mitr(),
+                        ),
+                        trailing: _buildDropdownButtonDetectFreq(
+                          _selectedDetectFreq ?? 1,
+                          (int? newValue) {
+                            setState(() {
+                              _selectedDetectFreq = newValue;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: SwitchListTile(
+                        title: Text(
+                          'เสียงแจ้งเตือน',
+                          style: GoogleFonts.mitr(),
+                        ),
+                        value: _enableSound,
+                        onChanged: (bool value) {
                           setState(() {
-                            _selectedSitLimit = newValue;
+                            _enableSound = value;
+                            print('Enable Sound: $_enableSound');
                           });
                         },
                       ),
                     ),
-                    ListTile(
-                      title: Text(
-                        'ความถี่แจ้งเตือน (นาที)',
-                        style: GoogleFonts.mitr(),
-                      ),
-                      trailing: _buildDropdownButtonSitLimitAlarmFreq(
-                        _selectedSitLimitAlarmFreq ?? 1,
-                        (int? newValue) {
-                          setState(() {
-                            _selectedSitLimitAlarmFreq = newValue;
-                          });
-                        },
-                      ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _saveSettings();
+                          },
+                          icon: const Icon(Icons.save),
+                          label: Text(
+                            'บันทึก',
+                            style: GoogleFonts.mitr(),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            textStyle: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              Card(
-                child: ListTile(
-                  title: Text(
-                    'ความถี่ในการตรวจจับ (วินาที)',
-                    style: GoogleFonts.mitr(),
-                  ),
-                  trailing: _buildDropdownButtonDetectFreq(
-                    _selectedDetectFreq ?? 1,
-                    (int? newValue) {
-                      setState(() {
-                        _selectedDetectFreq = newValue;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              // const Divider(),
-              Card(
-                child: SwitchListTile(
-                  title: Text(
-                    'เสียงแจ้งเตือน',
-                    style: GoogleFonts.mitr(),
-                  ),
-                  value: _enableSound,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _enableSound = value;
-                      print('Enable Sound: $_enableSound');
-                    });
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        // ignore: deprecated_member_use
+                        return WillPopScope(
+                          onWillPop: () async {
+                            _exitApp();
+                            return false;
+                          },
+                          child: AlertDialog(
+                            title: Text(
+                              'ลบบัญชีผู้ใช้งาน',
+                              style: GoogleFonts.mitr(),
+                            ),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'เราจะทำการลบบัญชีของคุณและข้อมูลทุกอย่างที่เกี่ยวกับบัญชีของคุณและบังคับออกจากแอปพลิเคชันของเราโดยทันที\nคุณแน่ใจไหม?',
+                                    style: GoogleFonts.mitr(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  Provider.of<UserAPI>(context, listen: false)
+                                      .clearData();
+                                  await GoogleSignInApi.logout();
+                                  deleteMember(id);
+                                  _exitApp();
+                                },
+                                child: Text(
+                                  'ยืนยัน',
+                                  style: GoogleFonts.mitr(),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'ยกเลิก',
+                                  style: GoogleFonts.mitr(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
                   },
-                ),
-              ),
-              // const Divider(),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      _saveSettings();
-                    },
-                    icon: const Icon(Icons.save),
-                    label: Text(
-                      'บันทึก',
-                      style: GoogleFonts.mitr(),
-                    ),
-                    style: ElevatedButton.styleFrom(
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    'ลบบัญชี',
+                    style: GoogleFonts.mitr(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
                       textStyle: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ],
+                      backgroundColor: const Color.fromARGB(255, 185, 68, 60)),
+                ),
               ),
             ],
           );
         },
       ),
     );
+  }
+
+  void _exitApp() {
+    if (Platform.isAndroid) {
+      SystemNavigator.pop();
+    } else if (Platform.isIOS) {
+      exit(0);
+    }
   }
 
   void _saveSettings() {
