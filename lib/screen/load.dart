@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_sit/services/google_signin_api.dart';
 import 'package:app_sit/widget/BTbar.dart';
 import 'package:app_sit/services/userAPI.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,9 @@ class _LoadPageState extends State<LoadPage> {
             ),
             actions: [
               TextButton(
-                onPressed: () {
+                onPressed: () async {
+                  Provider.of<UserAPI>(context, listen: false).clearData();
+                  await GoogleSignInApi.logout();
                   _exitApp();
                 },
                 child: Text(

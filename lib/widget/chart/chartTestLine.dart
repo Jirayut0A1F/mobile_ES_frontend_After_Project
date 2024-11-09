@@ -1,14 +1,14 @@
 import 'package:d_chart/commons/data_model.dart';
-import 'package:d_chart/d_chart.dart';  // Make sure this imports `DChartComboO`
+import 'package:d_chart/d_chart.dart'; // Make sure this imports `DChartComboO`
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChartTestLine extends StatefulWidget {
   final List<List<double>> dataAmount;
-  const ChartTestLine(
-      {Key? key,
-      required this.dataAmount,})
-      : super(key: key);
+  const ChartTestLine({
+    Key? key,
+    required this.dataAmount,
+  }) : super(key: key);
 
   @override
   State<ChartTestLine> createState() => _ChartTestLineState();
@@ -28,8 +28,10 @@ class _ChartTestLineState extends State<ChartTestLine> {
     for (var sublist in widget.dataAmount) {
       if (sublist.length >= 2) {
         ordinalList.add(OrdinalData(
-          domain: sublist[1].toInt().toString(), // Use the second element as domain
-          measure: ((sublist[0]/60*100).roundToDouble())/100, // Use the first element as measure
+          domain:
+              sublist[1].toInt().toString(), // Use the second element as domain
+          measure: ((sublist[0] / 60 * 100).roundToDouble()) /
+              100, // Use the first element as measure
         ));
       }
     }
@@ -73,7 +75,8 @@ class _ChartTestLineState extends State<ChartTestLine> {
           ),
           AspectRatio(
             aspectRatio: 0.9,
-            child: DChartComboO(  // Use DChartComboO for OrdinalGroup
+            child: DChartComboO(
+              // Use DChartComboO for OrdinalGroup
               animate: true,
               groupList: ordinalGroup, // Use ordinalGroup here
             ),

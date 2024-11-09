@@ -35,11 +35,11 @@ class _ChartTestLine2State extends State<ChartTestLine2> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-         Align(
+        Align(
           alignment: Alignment.center,
           child: Text(
             'ระยะเวลานั่งรวม',
-            style: GoogleFonts.mitr(fontSize:20),
+            style: GoogleFonts.mitr(fontSize: 20),
           ),
         ),
         Stack(
@@ -59,7 +59,7 @@ class _ChartTestLine2State extends State<ChartTestLine2> {
                 ),
               ),
             ),
-             Positioned(
+            Positioned(
               right: 0,
               bottom: 0,
               left: 0,
@@ -73,7 +73,7 @@ class _ChartTestLine2State extends State<ChartTestLine2> {
             Positioned(
               top: -1,
               left: 1,
-              child:  Text(
+              child: Text(
                 '\tชั่วโมง',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.mitr(),
@@ -86,7 +86,9 @@ class _ChartTestLine2State extends State<ChartTestLine2> {
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    TextStyle style = GoogleFonts.mitr(fontSize: 15,);
+    TextStyle style = GoogleFonts.mitr(
+      fontSize: 15,
+    );
     if (value.toInt() % 2 == 0) {
       return Text(value.toInt().toString(),
           style: style, textAlign: TextAlign.left);
@@ -95,35 +97,39 @@ class _ChartTestLine2State extends State<ChartTestLine2> {
     }
   }
 
-
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  TextStyle style = GoogleFonts.mitr(fontSize: 15);
-  int intValue = value.toInt();
+    TextStyle style = GoogleFonts.mitr(fontSize: 15);
+    int intValue = value.toInt();
 
-if(intValue%3==0){
-  return Text(
+    if (intValue % 3 == 0) {
+      return Text(
+        intValue.toString(),
+        style: style,
+        textAlign: TextAlign.left,
+      );
+    } else
+      return Container();
+  }
+
+  Widget bottomTitleWidgetsMin(double value, TitleMeta meta) {
+    TextStyle style = GoogleFonts.mitr(fontSize: 15);
+    int intValue = value.toInt();
+
+    return Text(
       intValue.toString(),
       style: style,
-      textAlign: TextAlign.left,);
-}else return Container();
-}
-
-
-Widget bottomTitleWidgetsMin(double value, TitleMeta meta) {
-  TextStyle style = GoogleFonts.mitr(fontSize: 15);
-  int intValue = value.toInt();
-
-return Text(
-      intValue.toString(),
-      style: style,
-      textAlign: TextAlign.left,);
-}
+      textAlign: TextAlign.left,
+    );
+  }
 
   LineChartData mainData() {
-    double maxValue = ((widget.data.map((item) => item[0]).reduce(max))/ 60 ).roundToDouble();
-    double maxY=maxValue%2==0?maxValue+2:maxValue+1;
-    List<FlSpot> spots =
-        widget.data.map((data) => FlSpot(data[1], (data[0] / 60 * 100).roundToDouble() / 100)).toList();
+    double maxValue =
+        ((widget.data.map((item) => item[0]).reduce(max)) / 60).roundToDouble();
+    double maxY = maxValue % 2 == 0 ? maxValue + 2 : maxValue + 1;
+    List<FlSpot> spots = widget.data
+        .map((data) =>
+            FlSpot(data[1], (data[0] / 60 * 100).roundToDouble() / 100))
+        .toList();
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -156,7 +162,9 @@ return Text(
             showTitles: true,
             reservedSize: 30,
             interval: 1,
-            getTitlesWidget: widget.data.length>15?bottomTitleWidgets : bottomTitleWidgetsMin,
+            getTitlesWidget: widget.data.length > 15
+                ? bottomTitleWidgets
+                : bottomTitleWidgetsMin,
           ),
         ),
         leftTitles: AxisTitles(

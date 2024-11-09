@@ -324,7 +324,7 @@ class _SettingPageState extends State<SettingPage> {
 
   void _exitApp() {
     if (Platform.isAndroid) {
-      SystemNavigator.pop();
+      SystemNavigator.pop(); //ออกจากแอป
     } else if (Platform.isIOS) {
       exit(0);
     }
