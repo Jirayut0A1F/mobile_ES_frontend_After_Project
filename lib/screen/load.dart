@@ -52,7 +52,7 @@ class _LoadPageState extends State<LoadPage> {
     bool isNewMember = await checkMember(
         widget.user.email, Provider.of<UserAPI>(context, listen: false).urlIP!);
     if (mounted) {
-      if (!isNewMember) {
+      if (isNewMember) {
         _showPDPADialog(context);
       } else {
         _startLoadingData();
