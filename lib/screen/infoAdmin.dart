@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:app_sit/services/userAPI.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({super.key});
@@ -15,11 +17,11 @@ class _InfoPageState extends State<InfoPage> {
   @override
   void initState() {
     super.initState();
-    getInfoAdmin();
+    getInfoAdmin(Provider.of<UserAPI>(context, listen: false).urlIP!);
   }
 
-  Future<void> getInfoAdmin() async {
-    final res = await http.get(Uri.parse('http://mesb.in.th:8000/noti/'));
+  Future<void> getInfoAdmin(String urlIP) async {
+    final res = await http.get(Uri.parse('$urlIP/noti/'));
     if (res.statusCode == 200) {
       setState(() {
         infoAdmin = json.decode(res.body);

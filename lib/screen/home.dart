@@ -22,8 +22,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-Future<void> sentReadNoti(String id) async {
-  const url = "http://43.229.133.174:8000/read_notification/";
+Future<void> sentReadNoti(String id, String urlIP) async {
+  final url = "$urlIP/read_notification/";
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UtF-8'
@@ -38,8 +38,8 @@ Future<void> sentReadNoti(String id) async {
   }
 }
 
-Future<bool> newNoti(String id) async {
-  const url = "http://43.229.133.174:8000/newNoti/";
+Future<bool> newNoti(String id, String urlIP) async {
+  final url = "$urlIP/newNoti/";
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UtF-8'
@@ -95,7 +95,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchNewNoti() async {
     final userAPI = Provider.of<UserAPI>(context, listen: false);
     if (userAPI.user != null) {
-      _pressed = await newNoti(userAPI.user!.id);
+      _pressed = await newNoti(userAPI.user!.id,
+          Provider.of<UserAPI>(context, listen: false).urlIP!);
     }
     setState(() {
       isLoading = false; // หยุดการโหลดเมื่อดึงข้อมูลเสร็จ
@@ -212,7 +213,11 @@ class _HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  sentReadNoti(id);
+                                  sentReadNoti(
+                                      id,
+                                      Provider.of<UserAPI>(context,
+                                              listen: false)
+                                          .urlIP!);
                                   // Provider.of<UserAPI>(context, listen: false)
                                   //     .readNoti();
                                   setState(() {

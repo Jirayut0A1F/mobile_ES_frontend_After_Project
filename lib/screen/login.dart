@@ -1,7 +1,10 @@
+import 'package:app_sit/screen/ipAddress.dart';
 import 'package:app_sit/screen/load.dart';
 import 'package:app_sit/services/google_signin_api.dart';
+import 'package:app_sit/services/userAPI.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -47,30 +50,60 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            elevation: 5,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ipAddress()),
+                            ModalRoute.withName('/ipAddress'),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 5,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'กรอก URL SERVER',
+                          style: GoogleFonts.mitr(
+                              color: Colors.black, fontSize: 18),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      if (Provider.of<UserAPI>(context, listen: false).urlIP !=
+                          null)
+                        ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              elevation: 5,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          ),
-                          icon: Image.asset(
-                            'assets/images/google_logo.png',
-                            height: 24,
-                            width: 24,
-                          ),
-                          label: Text(
-                            'ล็อกอินด้วย Google',
-                            style: GoogleFonts.mitr(fontSize: 18),
-                          ),
-                          onPressed: () {
-                            print('Go to Home page');
-                            signIn();
-                          }),
+                            icon: Image.asset(
+                              'assets/images/google_logo.png',
+                              height: 24,
+                              width: 24,
+                            ),
+                            label: Text(
+                              'ล็อกอินด้วย Google',
+                              style: GoogleFonts.mitr(fontSize: 18),
+                            ),
+                            onPressed: () {
+                              print('Go to Home page');
+                              signIn();
+                            }),
                     ],
                   ),
                 ),

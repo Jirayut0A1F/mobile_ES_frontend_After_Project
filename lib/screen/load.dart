@@ -28,8 +28,8 @@ class _LoadPageState extends State<LoadPage> {
     _checkIfNewMember();
   }
 
-  Future<bool> checkMember(String email) async {
-    const url = 'http://43.229.133.174:8000/ckNewMember/';
+  Future<bool> checkMember(String email, String urlIP) async {
+    final url = '$urlIP/ckNewMember/';
     final res = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -49,9 +49,10 @@ class _LoadPageState extends State<LoadPage> {
   }
 
   void _checkIfNewMember() async {
-    bool isNewMember = await checkMember(widget.user.email);
+    bool isNewMember = await checkMember(
+        widget.user.email, Provider.of<UserAPI>(context, listen: false).urlIP!);
     if (mounted) {
-      if (isNewMember) {
+      if (!isNewMember) {
         _showPDPADialog(context);
       } else {
         _startLoadingData();
@@ -70,11 +71,11 @@ class _LoadPageState extends State<LoadPage> {
     await Provider.of<UserAPI>(context, listen: false).getSettingData();
   }
 
-  void stopDetect() {
+  void stopDetect(String urlIP) {
     final user = Provider.of<UserAPI>(context, listen: false).user;
     if (user != null) {
       final id = user.id;
-      const url = 'http://43.229.133.174:8000/end_detect/';
+      final url = '$urlIP/end_detect/';
       http
           .post(
         Uri.parse(url),
@@ -115,7 +116,7 @@ class _LoadPageState extends State<LoadPage> {
           } else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) {
-                stopDetect();
+                stopDetect(Provider.of<UserAPI>(context, listen: false).urlIP!);
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const BTbar()),
@@ -151,7 +152,7 @@ class _LoadPageState extends State<LoadPage> {
                 children: [
                   Text(
                     'เรียน ผู้ใช้งาน\nเพื่อให้เป็นไปตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล (PDPA) แอปพลิเคชันนี้มีความจำเป็นที่จะต้องขออนุญาตจากท่านในการเก็บรวบรวม ประมวลผล และใช้ข้อมูลส่วนบุคคลของท่านสำหรับวัตถุประสงค์ในการปรับปรุงการให้บริการและเพื่อประสบการณ์การใช้งานที่ดียิ่งขึ้น ข้อมูลดังกล่าวอาจรวมถึง ชื่อ ที่อยู่อีเมล ข้อมูลการเข้าใช้งาน และข้อมูลการตั้งค่าที่เกี่ยวข้อง โดยข้อมูลของท่านจะได้รับการเก็บรักษาอย่างปลอดภัยและนำไปใช้เฉพาะในขอบเขตที่กฎหมายอนุญาตเท่านั้น\nหากท่านไม่ยินยอมในการให้สิทธิ์ แอปพลิเคชันจะปิดการใช้งานทันที แต่หากท่านยอมรับข้อตกลง ท่านสามารถใช้งานแอปพลิเคชันนี้ต่อไปได้',
-                    style: GoogleFonts.mitr(),
+                    style: GoogleFonts.mitr(fontSize: 18),
                   ),
                 ],
               ),

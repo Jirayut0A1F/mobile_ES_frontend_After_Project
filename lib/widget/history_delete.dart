@@ -16,8 +16,9 @@ class History_Delete extends StatefulWidget {
   State<History_Delete> createState() => _History_DeleteState();
 }
 
-Future<bool> deleteByDate(String startDate, String endDate, String id) async {
-  const url = 'http://43.229.133.174:8000/delete_img_by_date_and_accId/';
+Future<bool> deleteByDate(
+    String startDate, String endDate, String id, String urlIP) async {
+  final url = '$urlIP/delete_img_by_date_and_accId/';
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UtF-8'
@@ -40,8 +41,8 @@ Future<bool> deleteByDate(String startDate, String endDate, String id) async {
   }
 }
 
-Future<List<String>> getMaxMin(String id) async {
-  const url = "http://43.229.133.174:8000/get_detectDT_max_min/";
+Future<List<String>> getMaxMin(String id, String urlIP) async {
+  final url = "$urlIP/get_detectDT_max_min/";
   List<String> getMaxMin = [];
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -64,8 +65,9 @@ Future<List<String>> getMaxMin(String id) async {
   }
 }
 
-Future<int> getAmount(String startDate, String endDate, String id) async {
-  const url = 'http://mesb.in.th:8000/pre_delete_by_date_and_accId/';
+Future<int> getAmount(
+    String startDate, String endDate, String id, String urlIP) async {
+  final url = '$urlIP/pre_delete_by_date_and_accId/';
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UtF-8'
@@ -106,7 +108,8 @@ class _History_DeleteState extends State<History_Delete> {
   }
 
   Future<void> fetchMaxMinDates(String idUser) async {
-    List<String> maxMin = await getMaxMin(idUser);
+    List<String> maxMin = await getMaxMin(
+        idUser, Provider.of<UserAPI>(context, listen: false).urlIP!);
     if (mounted) {
       setState(() {
         listMaxMin = maxMin;
@@ -310,8 +313,11 @@ class _History_DeleteState extends State<History_Delete> {
               actions: <Widget>[
                 ElevatedButton(
                   onPressed: () async {
-                    if (await deleteByDate(_dateStartController.text,
-                        _dateEndController.text, idUser!)) {
+                    if (await deleteByDate(
+                        _dateStartController.text,
+                        _dateEndController.text,
+                        idUser!,
+                        Provider.of<UserAPI>(context, listen: false).urlIP!)) {
                       showInSnackBar('ลบรูปภาพสำเร็จ');
                     } else {
                       showInSnackBar('เกิดข้อผิดพลาดในการลบ');
@@ -366,10 +372,10 @@ class _History_DeleteState extends State<History_Delete> {
             showInSnackBar('คุณยังไม่ได้เลือกวันที่');
           } else {
             int fetchedAmount = await getAmount(
-              _dateStartController.text,
-              _dateEndController.text,
-              idUser!,
-            );
+                _dateStartController.text,
+                _dateEndController.text,
+                idUser!,
+                Provider.of<UserAPI>(context, listen: false).urlIP!);
             if (mounted) {
               setState(() {
                 display = true;

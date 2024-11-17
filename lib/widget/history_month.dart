@@ -24,8 +24,8 @@ class History_Month extends StatefulWidget {
 }
 
 Future<MonthHistoryData?> getHistoryMonth(
-    String selectedMonthYear, String id) async {
-  const url = 'http://43.229.133.174:8000/month_history/';
+    String selectedMonthYear, String id, String urlIP) async {
+  final url = '$urlIP/month_history/';
   try {
     final res = await http.post(
       Uri.parse(url),
@@ -148,7 +148,9 @@ class _History_MonthState extends State<History_Month> {
 
   Future<void> _fetchMonthHistory() async {
     final data = await getHistoryMonth(
-        _selectedMonth, Provider.of<UserAPI>(context, listen: false).user!.id);
+        _selectedMonth,
+        Provider.of<UserAPI>(context, listen: false).user!.id,
+        Provider.of<UserAPI>(context, listen: false).urlIP!);
     if (!mounted) return; // Check if the widget is still mounted
     setState(() {
       mhData = data;

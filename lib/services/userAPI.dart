@@ -7,8 +7,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class UserAPI with ChangeNotifier {
-  final url = 'http://43.229.133.174:8000/login/';
-
+  String? urlIP;
+  String get url => '${urlIP ?? ""}/login/';
   UserData? user;
   SettingData? setting;
   bool isLoading = false;
@@ -22,6 +22,10 @@ class UserAPI with ChangeNotifier {
   List<dynamic>? detectFreq;
   List<dynamic>? sitLimit;
   List<dynamic>? sitLimitAlarmFreq;
+
+  void getIP(String urlIP) {
+    this.urlIP = urlIP;
+  }
 
   Future<UserData?> getUserData(GoogleSignInAccount userG) async {
     try {
@@ -76,6 +80,7 @@ class UserAPI with ChangeNotifier {
   // }
 
   void clearData() {
+    urlIP = null;
     user = null;
     setting = null;
     imageProfile = null;

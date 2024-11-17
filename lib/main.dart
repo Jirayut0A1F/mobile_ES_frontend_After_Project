@@ -1,6 +1,7 @@
 import 'package:app_sit/screen/cameraCalibrate.dart';
 import 'package:app_sit/screen/cameraDetect.dart';
 import 'package:app_sit/screen/infoAdmin.dart';
+import 'package:app_sit/screen/ipAddress.dart';
 import 'package:app_sit/screen/login.dart';
 import 'package:app_sit/services/userAPI.dart';
 import 'package:app_sit/screen/teachCamera.dart';
@@ -53,6 +54,8 @@ class MyApp extends StatelessWidget {
             return _createSlideTransitionRoute(const TeachSitPagge());
           case '/teachCamera':
             return _createSlideTransitionRoute(const TeachCameraPage());
+          case '/ipAddress':
+            return _createSlideTransitionRoute(const ipAddress());
           case '/cameraDetect':
             return _createSlideTransitionRoute(
                 CameraDetect(cameras: cameras ?? []));

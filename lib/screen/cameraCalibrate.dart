@@ -29,8 +29,8 @@ class CameraCalibrate extends StatefulWidget {
 }
 
 Future<Map<String, Map>?> uploadCalibrate(
-    String id, XFile imageFile, String startCalibrate) async {
-  const url = 'http://mesb.in.th:8000/process_calibrate/';
+    String id, XFile imageFile, String startCalibrate, String urlIP) async {
+  final url = '$urlIP/process_calibrate/';
   Uint8List bytes = await imageFile.readAsBytes();
   String imageBase64 = base64Encode(bytes);
   final res = await http.post(Uri.parse(url),
@@ -509,10 +509,10 @@ class _CameraCalibrateState extends State<CameraCalibrate>
           amountImage++;
           String startCali = startCalibrate ? 'T' : 'F';
           dataModel = await uploadCalibrate(
-            Provider.of<UserAPI>(context, listen: false).user!.id,
-            imageFile!,
-            startCali,
-          );
+              Provider.of<UserAPI>(context, listen: false).user!.id,
+              imageFile!,
+              startCali,
+              Provider.of<UserAPI>(context, listen: false).urlIP!);
           if (mounted) {
             // ตรวจสอบอีกครั้งหลังจากการทำ async task
             final dataAnother = dataModel?['dataAnother'];

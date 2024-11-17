@@ -25,8 +25,8 @@ class CameraDetect extends StatefulWidget {
   State<CameraDetect> createState() => _CameraDetectState();
 }
 
-Future<List?> uploadImage(XFile? imageFile, String id) async {
-  const url = 'http://43.229.133.174:8000/process_detect/';
+Future<List?> uploadImage(XFile? imageFile, String id, String urlIP) async {
+  final url = '$urlIP/process_detect/';
   if (imageFile != null) {
     Uint8List bytes = await imageFile.readAsBytes();
     String imageBase64 = base64Encode(bytes);
@@ -55,8 +55,8 @@ Future<List?> uploadImage(XFile? imageFile, String id) async {
   return null;
 }
 
-Future<void> stopDetect(String id) async {
-  const url = 'http://43.229.133.174:8000/end_detect/';
+Future<void> stopDetect(String id, String urlIP) async {
+  final url = '$urlIP/end_detect/';
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UtF-8'
@@ -368,7 +368,8 @@ class _CameraDetectState extends State<CameraDetect>
       XFile? file = await takePicture();
       if (file != null) {
         imageFile = file;
-        List? stateName = await uploadImage(imageFile, id);
+        List? stateName = await uploadImage(
+            imageFile, id, Provider.of<UserAPI>(context, listen: false).urlIP!);
         imageFile = null;
         await _loadSoundSetting();
         if (_enableSound) {
@@ -476,7 +477,7 @@ class _CameraDetectState extends State<CameraDetect>
     WakelockPlus.toggle(enable: _isTakingPictures);
     WakelockPlus.disable();
     // WakelockPlus.disable();
-    stopDetect(id);
+    stopDetect(id, Provider.of<UserAPI>(context, listen: false).urlIP!);
     _timer?.cancel();
     Navigator.pop(context);
   }

@@ -18,8 +18,9 @@ class History_Day extends StatefulWidget {
   State<History_Day> createState() => _History_DayState();
 }
 
-Future<HistoryDailyData?> getHistoryDate(String selectedDate, String id) async {
-  const url = 'http://43.229.133.174:8000/daily_history_data_img/';
+Future<HistoryDailyData?> getHistoryDate(
+    String selectedDate, String id, String urlIP) async {
+  final url = '$urlIP/daily_history_data_img/';
   try {
     final res = await http.post(
       Uri.parse(url),
@@ -75,7 +76,9 @@ class _History_DayState extends State<History_Day> {
       isLoading = true; // เริ่มโหลดข้อมูล
     });
     final data = await getHistoryDate(
-        date, Provider.of<UserAPI>(context, listen: false).user!.id);
+        date,
+        Provider.of<UserAPI>(context, listen: false).user!.id,
+        Provider.of<UserAPI>(context, listen: false).urlIP!);
     if (mounted) {
       setState(() {
         dateData = data;

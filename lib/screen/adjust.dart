@@ -29,9 +29,9 @@ class AdjustPage extends StatefulWidget {
   State<AdjustPage> createState() => _AdjustPageState();
 }
 
-Future<void> setNewPoint(
-    String id, String imgStr, String newPoint, String isLeft) async {
-  const url = 'http://mesb.in.th:8000/set_calibrate/';
+Future<void> setNewPoint(String id, String imgStr, String newPoint,
+    String isLeft, String urlIP) async {
+  final url = '$urlIP/set_calibrate/';
   final res = await http.post(Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UtF-8'
@@ -474,8 +474,12 @@ class _AdjustPageState extends State<AdjustPage> {
               ElevatedButton(
                 onPressed: () async {
                   String imageBase64 = base64Encode(widget.imageBytes);
-                  await setNewPoint(idUser!, imageBase64, jsonEncode(newAngle),
-                      widget.isLeft ? 'false' : 'true');
+                  await setNewPoint(
+                      idUser!,
+                      imageBase64,
+                      jsonEncode(newAngle),
+                      widget.isLeft ? 'false' : 'true',
+                      Provider.of<UserAPI>(context, listen: false).urlIP!);
                   clearData();
                   Navigator.pushAndRemoveUntil(
                     context,

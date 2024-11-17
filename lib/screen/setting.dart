@@ -18,9 +18,9 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
-Future<void> postSetting(
-    String id, int detectFreq, int sitLimit, int sitLimitFreq) async {
-  const url = 'http://43.229.133.174:8000/update_setting/';
+Future<void> postSetting(String id, int detectFreq, int sitLimit,
+    int sitLimitFreq, String urlIP) async {
+  final url = '$urlIP/update_setting/';
   try {
     final res = await http.post(
       Uri.parse(url),
@@ -62,8 +62,8 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  Future<void> deleteMember(String id) async {
-    const url = 'http://43.229.133.174:8000/deleteMember/';
+  Future<void> deleteMember(String id, String urlIP) async {
+    final url = '$urlIP/deleteMember/';
     final res = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -274,10 +274,14 @@ class _SettingPageState extends State<SettingPage> {
                             actions: [
                               TextButton(
                                 onPressed: () async {
+                                  await GoogleSignInApi.logout();
+                                  deleteMember(
+                                      id,
+                                      Provider.of<UserAPI>(context,
+                                              listen: false)
+                                          .urlIP!);
                                   Provider.of<UserAPI>(context, listen: false)
                                       .clearData();
-                                  await GoogleSignInApi.logout();
-                                  deleteMember(id);
                                   _exitApp();
                                 },
                                 child: Text(
@@ -339,8 +343,12 @@ class _SettingPageState extends State<SettingPage> {
       selectedSitLimitAlarmFreq: _selectedSitLimitAlarmFreq,
     );
     _saveSoundSetting(); // Save sound setting when save button is pressed
-    postSetting(Provider.of<UserAPI>(context, listen: false).setting!.id,
-        _selectedDetectFreq!, _selectedSitLimit!, _selectedSitLimitAlarmFreq!);
+    postSetting(
+        Provider.of<UserAPI>(context, listen: false).setting!.id,
+        _selectedDetectFreq!,
+        _selectedSitLimit!,
+        _selectedSitLimitAlarmFreq!,
+        Provider.of<UserAPI>(context, listen: false).urlIP!);
   }
 
   void showInSnackBar(String message) {
